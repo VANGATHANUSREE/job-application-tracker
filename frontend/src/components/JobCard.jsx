@@ -2,18 +2,29 @@ import api from "../api/axios";
 
 const JobCard = ({ job, refreshJobs }) => {
   const handleStatusChange = async (e) => {
-    const newStatus = e.target.value;
-
-    await api.patch(`jobs/${job.id}/`, {
-      status: newStatus,
-    });
-
-    refreshJobs();
+    try {
+      await api.patch(`jobs/${job.id}/`, {
+        status: e.target.value,
+      });
+      refreshJobs();
+    } catch (error) {
+      alert("❌ Failed to update status");
+    }
   };
 
   const handleDelete = async () => {
-    await api.delete(`jobs/${job.id}/`);
-    refreshJobs();
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this job?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`jobs/${job.id}/`);
+      refreshJobs();
+    } catch (error) {
+      alert("❌ Failed to delete job");
+    }
   };
 
   return (
@@ -21,7 +32,6 @@ const JobCard = ({ job, refreshJobs }) => {
       <h4>{job.company_name}</h4>
       <p>{job.role}</p>
 
-      {/* STATUS DROPDOWN */}
       <select value={job.status} onChange={handleStatusChange}>
         <option value="Applied">Applied</option>
         <option value="Interview">Interview</option>
@@ -29,7 +39,6 @@ const JobCard = ({ job, refreshJobs }) => {
         <option value="Rejected">Rejected</option>
       </select>
 
-      {/* DELETE BUTTON */}
       <button
         onClick={handleDelete}
         style={{ marginTop: "10px", background: "#ef4444" }}

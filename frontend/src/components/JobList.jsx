@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import JobCard from "./JobCard";
+import JobForm from "./JobForm";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
 
   const fetchJobs = async () => {
-    const res = await api.get("jobs/");
-    setJobs(res.data);
+    try {
+      const res = await api.get("jobs/");
+      setJobs(res.data);
+    } catch (error) {
+      alert("❌ Failed to fetch jobs. Please login via admin.");
+    }
   };
 
   useEffect(() => {
@@ -15,8 +20,11 @@ const JobList = () => {
   }, []);
 
   return (
-    <div>
+    <>
+      <JobForm refreshJobs={fetchJobs} />
+
       <h3>My Job Applications</h3>
+
       <div className="grid">
         {jobs.length === 0 ? (
           <p>No jobs found</p>
@@ -30,7 +38,7 @@ const JobList = () => {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 };
 
