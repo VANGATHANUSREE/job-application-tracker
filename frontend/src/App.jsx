@@ -1,14 +1,12 @@
-import { useEffect } from "react";
-import api from "./api";
+import Dashboard from "./pages/Dashboard";
+import "./styles/main.css";
 
 function App() {
-  useEffect(() => {
-    api.get("jobs/")
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
-  return <h1>Job Application Tracker</h1>;
+  return (
+    <div className="App">
+      <Dashboard />
+    </div>
+  );
 }
 
 export default App;
